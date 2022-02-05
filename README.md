@@ -15,7 +15,7 @@ We suggest [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 #### Mysql
 We suggest [Wamp Server]() for windows
 #### Environnement Setup
-Create these environement variables otherwise you'll get a `Failed to Configure a DataSource Error`
+Create these environement variables otherwise you'll get a *Failed to Configure a DataSource Error*
   - `MYSQL_USER`: user's username in mysql.
   - `MYSQL_PASSWORD`: user's password in mysql.
 ### Get the code
