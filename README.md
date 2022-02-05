@@ -15,7 +15,7 @@ We suggest [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 #### Mysql
 We suggest [Wamp Server]() for windows
 #### Environnement Setup
-Create these environement variables to put your database login information
+Create these environement variables
   - `MYSQL_USER`: user's username in mysql.
   - `MYSQL_PASSWORD`: user's password in mysql.
 ### Get the code
