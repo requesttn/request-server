@@ -36,7 +36,7 @@ public class MainApp implements CommandLineRunner {
     @Override
     public void run(String... args) {
         userRegistrationService.registerUser(new UserRegistrationData(
-                "Houssem", "Nasri", "houssemnasri2001@gmail.com"
+                "Houssem", "Nasri", "houssemnasri999@gmail.com"
         ));
     }
 }
