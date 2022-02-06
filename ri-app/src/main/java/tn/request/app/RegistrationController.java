@@ -26,7 +26,8 @@ public class RegistrationController {
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserRegistrationData userData) {
         try {
-            Exceptions.throwIf(isEmailNotValid(userData.getEmail()), new InvalidEmailFormatException("Invalid Email: " + userData.getEmail()));
+            Exceptions.throwIf(isEmailNotValid(userData.getEmail()),
+                    new InvalidEmailFormatException("Invalid Email: " + userData.getEmail()));
             registrationService.registerUser(userData);
             return ResponseEntity.ok(userData);
         } catch (InvalidEmailFormatException invalidEmailFormatException) {

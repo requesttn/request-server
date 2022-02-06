@@ -35,6 +35,7 @@ public class UserRegistrationService {
             throw new UserAlreadyExistException(userData.getEmail());
         } else {
             UserEntity user = userRepository.save(userEntityMapper.from(userData));
+            //TODO: Run this asynchronously
             sendConfirmationEmailTo(user);
         }
     }
