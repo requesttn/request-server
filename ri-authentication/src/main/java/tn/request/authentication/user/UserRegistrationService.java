@@ -41,13 +41,9 @@ public class UserRegistrationService {
     }
 
     private void sendConfirmationEmailTo(UserEntity user) {
-        String generatedToken = generateTokenString();
+        String generatedToken = UUID.randomUUID().toString();
         confirmationEmailSender.send(user.getEmail(), generatedToken);
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(null, generatedToken, user);
         confirmationTokenRepository.save(confirmationToken);
-    }
-
-    private String generateTokenString() {
-        return UUID.randomUUID().toString();
     }
 }
