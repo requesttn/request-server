@@ -1,4 +1,4 @@
-package tn.request.app.util;
+package tn.request;
 
 public class Exceptions {
     public static <E extends Exception> void throwIf(boolean condition, E exception) throws E {

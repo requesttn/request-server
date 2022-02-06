@@ -7,9 +7,7 @@
         4.0.0
     </modelVersion>
 
-    <packaging>
-        pom
-    </packaging>
+    <packaging>pom</packaging>
 
     <groupId>
         tn.request
@@ -44,6 +42,9 @@
     <modules>
         <module>
             ri-app
+        </module>
+        <module>
+            ri-common
         </module>
     </modules>
     <dependencyManagement>
