@@ -14,7 +14,7 @@ Installing Git differes from one operating system to another
 We suggest [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 ### Mysql
 We suggest [Wamp Server]() for windows
-### Environnement Setup
+### Environnement Variables
 #### Database Server
   - `MYSQL_USER`: user's username in mysql.
   - `MYSQL_PASSWORD`: user's password in mysql.
