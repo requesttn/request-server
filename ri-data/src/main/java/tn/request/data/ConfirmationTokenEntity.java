@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import tn.request.data.user.UserEntity;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class ConfirmationTokenEntity {
     private static final long EXPIRES_AFTER_N_MINUTES = 24 * 60;
 
@@ -36,7 +38,7 @@ public class ConfirmationTokenEntity {
     @JoinColumn(nullable = false, name = "user_id")
     private UserEntity user;
 
-    private LocalDateTime expiryDate = computeExpiryDate();
+    private final LocalDateTime expiryDate = computeExpiryDate();
 
     private static LocalDateTime computeExpiryDate() {
         return LocalDateTime.now().plusMinutes(EXPIRES_AFTER_N_MINUTES);
