@@ -28,6 +28,7 @@ public class UserEntity {
     private String lastname;
     @Column(unique = true)
     private String email;
+    private boolean verified;
 
     @Override
     public boolean equals(Object o) {
@@ -39,7 +40,8 @@ public class UserEntity {
         return getId().equals(that.getId()) &&
                 Objects.equals(getFirstname(), that.getFirstname()) &&
                 Objects.equals(getLastname(), that.getLastname()) &&
-                getEmail().equals(that.getEmail());
+                getEmail().equals(that.getEmail()) &&
+                that.isVerified() == isVerified();
     }
 
     @Override
