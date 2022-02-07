@@ -3,6 +3,7 @@ package tn.request.authentication.user;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +41,10 @@ public class UserRegistrationService {
         .thenThrow(new UserAlreadyExistException(userData.getEmail()));
 
     UserEntity user = userRepository.save(userEntityMapper.from(userData));
-    // TODO: Run this asynchronously
-    sendConfirmationEmailTo(user);
+    CompletableFuture.runAsync(() -> sendConfirmationEmailTo(user));
   }
 
   public void confirmEmail(@NonNull String token) {
-
     Optional<ConfirmationTokenEntity> confirmationTokenOpt =
         confirmationTokenRepository.findByToken(token);
 
