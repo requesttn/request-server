@@ -1,2 +1,11 @@
 # Authentication Module
-- This where the authentication and authorization logic resides.
+
+-
+This
+where
+the
+authentication
+and
+authorization
+logic
+resides.

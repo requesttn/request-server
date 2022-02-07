@@ -21,31 +21,32 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String firstname;
-    private String lastname;
-    @Column(unique = true)
-    private String email;
-    private boolean verified;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserEntity that = (UserEntity) o;
-        return getId().equals(that.getId()) &&
-                Objects.equals(getFirstname(), that.getFirstname()) &&
-                Objects.equals(getLastname(), that.getLastname()) &&
-                getEmail().equals(that.getEmail()) &&
-                that.isVerified() == isVerified();
-    }
+  private String firstname;
+  private String lastname;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getEmail());
-    }
+  @Column(unique = true)
+  private String email;
+
+  private boolean verified;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    UserEntity that = (UserEntity) o;
+    return getId().equals(that.getId())
+        && Objects.equals(getFirstname(), that.getFirstname())
+        && Objects.equals(getLastname(), that.getLastname())
+        && getEmail().equals(that.getEmail())
+        && that.isVerified() == isVerified();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId(), getEmail());
+  }
 }

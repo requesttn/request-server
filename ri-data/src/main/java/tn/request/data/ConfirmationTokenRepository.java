@@ -1,6 +1,13 @@
 package tn.request.data;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
 
-public interface ConfirmationTokenRepository extends CrudRepository<ConfirmationTokenEntity, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationTokenEntity, Long> {
+  boolean existsByToken(String token);
+
+  ConfirmationTokenEntity getByToken(String token);
+
+  Optional<ConfirmationTokenEntity> findByToken(String token);
 }
