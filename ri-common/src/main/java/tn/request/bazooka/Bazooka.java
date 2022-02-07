@@ -20,6 +20,8 @@ public class Bazooka {
   }
 
   public <E extends Exception> void thenThrow(E exception) throws E {
-    throw exception;
+    if (condition) {
+      throw exception;
+    }
   }
 }
