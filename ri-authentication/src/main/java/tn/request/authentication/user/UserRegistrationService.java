@@ -41,7 +41,19 @@ public class UserRegistrationService {
         .thenThrow(new UserAlreadyExistException(userData.getEmail()));
 
     UserEntity user = userRepository.save(userEntityMapper.from(userData));
-    CompletableFuture.runAsync(() -> sendConfirmationEmailTo(user));
+    CompletableFuture.runAsync(() -> sendConfirmationEmailTo(user))
+        .handleAsync(
+            (unused, throwable) -> {
+              if (throwable == null) {
+                log.info("Confirmation email sent successfully to '{}'", user.getEmail());
+              } else {
+                log.error(
+                    "Error while sending confirmation email to '{}': {}",
+                    user.getEmail(),
+                    throwable.toString());
+              }
+              return null;
+            });
   }
 
   public void confirmEmail(@NonNull String token) {
@@ -60,7 +72,16 @@ public class UserRegistrationService {
   }
 
   private void doConfirmEmail(ConfirmationTokenEntity confirmationToken) {
-    // TODO: Implement email confirmation
+    Objects.requireNonNull(confirmationToken);
+    Objects.requireNonNull(confirmationToken.getUser());
+    Objects.requireNonNull(confirmationToken.getToken());
+
+    UserEntity confirmedUser = confirmationToken.getUser();
+    confirmedUser.setVerified(true);
+    userRepository.save(confirmedUser);
+
+    confirmationTokenRepository.delete(confirmationToken);
+
     log.info("Email Confirmed Successfully: " + confirmationToken.getUser().getEmail());
   }
 
