@@ -26,34 +26,38 @@ import tn.request.data.user.UserEntity;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class ConfirmationTokenEntity {
-  private static final long EXPIRES_AFTER_N_MINUTES = 24 * 60;
-  private final LocalDateTime expiryDate = computeExpiryDate();
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
-  private String token;
-  @OneToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
-  @JoinColumn(nullable = false, name = "user_id")
-  private UserEntity user;
+    private static final long EXPIRES_AFTER_N_MINUTES = 24 * 60;
+    private final LocalDateTime expiryDate = computeExpiryDate();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String token;
+    @OneToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "user_id")
+    private UserEntity user;
 
-  private static LocalDateTime computeExpiryDate() {
-    return LocalDateTime.now().plusMinutes(EXPIRES_AFTER_N_MINUTES);
-  }
+    private static LocalDateTime computeExpiryDate() {
+        return LocalDateTime.now()
+                .plusMinutes(EXPIRES_AFTER_N_MINUTES);
+    }
 
-  public boolean isExpired() {
-    return LocalDateTime.now().isAfter(getExpiryDate());
-  }
+    public boolean isExpired() {
+        return LocalDateTime.now()
+                .isAfter(getExpiryDate());
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    ConfirmationTokenEntity that = (ConfirmationTokenEntity) o;
-    return id != null && Objects.equals(id, that.id);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        ConfirmationTokenEntity that = (ConfirmationTokenEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
 
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
