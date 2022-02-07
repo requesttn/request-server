@@ -1,7 +1,6 @@
 # Authentication Module
 
--
-This
+- This
 where
 the
 authentication

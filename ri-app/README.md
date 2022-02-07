@@ -1,7 +1,6 @@
 # Application Module
 
--
-This
+- This
 is
 the
 entry
