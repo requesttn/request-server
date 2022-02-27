@@ -3,10 +3,14 @@ package tn.request.app;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Strings;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,10 +31,13 @@ public class RegistrationController {
 
     private UserRegistrationService registrationService;
 
+    @Operation(summary = "Create a new user and send a confirmation link to user email.")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "400", description = "Invalid email format", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "409", description = "User already registered", content = {@Content(mediaType = "application/json")})
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserRegistrationData userData) {
         try {
-
             Bazooka.checkIf(isEmailNotValid(userData.getEmail()))
                     .thenThrow(new InvalidEmailFormatException("Invalid Email: " + userData.getEmail()));
 
@@ -53,6 +60,9 @@ public class RegistrationController {
                 .build();
     }
 
+    @Operation(summary = "Confirm user email")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = MimeTypeUtils.TEXT_HTML_VALUE)})
+    @ApiResponse(responseCode = "400", description = "Token is either invalid or expired", content = {@Content(mediaType = MimeTypeUtils.APPLICATION_JSON_VALUE)})
     @GetMapping("/confirmRegistration")
     public ResponseEntity<Object> confirmEmail(@RequestParam("token") String token) {
         try {

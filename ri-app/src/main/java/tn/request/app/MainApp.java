@@ -1,6 +1,6 @@
 package tn.request.app;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tn.request.authentication.user.UserRegistrationData;
-import tn.request.authentication.user.UserRegistrationService;
 
 @SpringBootApplication
 @EnableJpaRepositories("tn.request.*")
@@ -20,9 +18,6 @@ import tn.request.authentication.user.UserRegistrationService;
 @RequestMapping("/")
 @ComponentScan(basePackages = "tn.request.*")
 public class MainApp implements CommandLineRunner {
-
-    @Autowired
-    private UserRegistrationService userRegistrationService;
 
     public static void main(String[] args) {
         SpringApplication.run(MainApp.class, args);
@@ -35,8 +30,5 @@ public class MainApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        userRegistrationService.registerUser(new UserRegistrationData(
-                "Houssem", "Nasri", "houssemnasri999@gmail.com"
-        ));
     }
 }

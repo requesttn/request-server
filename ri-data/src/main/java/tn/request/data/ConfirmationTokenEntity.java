@@ -37,13 +37,11 @@ public class ConfirmationTokenEntity {
     private UserEntity user;
 
     private static LocalDateTime computeExpiryDate() {
-        return LocalDateTime.now()
-                .plusMinutes(EXPIRES_AFTER_N_MINUTES);
+        return LocalDateTime.now().plusMinutes(EXPIRES_AFTER_N_MINUTES);
     }
 
     public boolean isExpired() {
-        return LocalDateTime.now()
-                .isAfter(getExpiryDate());
+        return LocalDateTime.now().isAfter(getExpiryDate());
     }
 
     @Override
