@@ -13,7 +13,7 @@ Installing Git differes from one operating system to another
 ### IDE
 We suggest [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 ### Mysql
-We suggest [Wamp Server]() for windows
+We suggest [Wamp Server](https://www.wampserver.com/en/) for windows
 ### Environnement Variables
 #### Database Server
   - `MYSQL_USER`: user's username in mysql.
