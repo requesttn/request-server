@@ -7,9 +7,7 @@
         4.0.0
     </modelVersion>
 
-    <packaging>
-        pom
-    </packaging>
+    <packaging>pom</packaging>
 
     <groupId>
         tn.request
