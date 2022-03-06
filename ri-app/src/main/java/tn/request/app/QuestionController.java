@@ -27,7 +27,7 @@ public class QuestionController {
     @Operation(summary = "Post a new question")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
     @ApiResponse(responseCode = "400", description = "Invalid asker id", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "401", description = "Asker is not verified", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "401", description = "Asker is unauthorized to ask questions", content = {@Content(mediaType = "application/json")})
     @PostMapping("/ask")
     public ResponseEntity<Object> askQuestion(@RequestBody QuestionData questionData) {
         try {
