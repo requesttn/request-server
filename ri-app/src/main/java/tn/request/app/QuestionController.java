@@ -1,5 +1,8 @@
 package tn.request.app;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,10 @@ public class QuestionController {
 
     private QuestionService questionService;
 
+    @Operation(summary = "Post a new question")
+    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "400", description = "Invalid asker id", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "401", description = "Asker is not verified", content = {@Content(mediaType = "application/json")})
     @PostMapping("/ask")
     public ResponseEntity<Object> askQuestion(@RequestBody QuestionData questionData) {
         try {
@@ -33,7 +40,7 @@ public class QuestionController {
         }
         catch (NonVerifiedAskerException nonVerifiedAskerException) {
             log.error(nonVerifiedAskerException.getMessage());
-            return new ResponseEntity<>("Asker is not verified", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Asker is unauthorized to ask questions", HttpStatus.UNAUTHORIZED);
         }
         catch (Exception e) {
             log.error(e.getMessage());
