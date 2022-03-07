@@ -47,7 +47,7 @@
                 ri-authentication
             </artifactId>
             <version>
-                0.0.1-SNAPSHOT
+                0.0.1
             </version>
         </dependency>
         <dependency>
