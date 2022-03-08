@@ -1,10 +1,10 @@
-package tn.request.authentication;
+package tn.request.domain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RiAuthenticationApplicationTests {
+class RiDomainApplicationTests {
 
     @Test
     void contextLoads() {

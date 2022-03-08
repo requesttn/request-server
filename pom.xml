@@ -47,13 +47,13 @@
             ri-common
         </module>
         <module>
-            ri-authentication
-        </module>
-        <module>
             ri-data
         </module>
         <module>
             ri-questions
+        </module>
+        <module>
+            ri-domain
         </module>
     </modules>
     <dependencyManagement>

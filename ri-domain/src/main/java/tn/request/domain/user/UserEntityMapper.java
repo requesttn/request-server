@@ -1,4 +1,4 @@
-package tn.request.authentication.user;
+package tn.request.domain.user;
 
 import org.springframework.stereotype.Component;
 import tn.request.data.user.UserEntity;

@@ -1,4 +1,4 @@
-package tn.request.authentication;
+package tn.request.domain.user;
 
 public class InvalidConfirmationTokenException extends RuntimeException {
     public InvalidConfirmationTokenException(String message) {

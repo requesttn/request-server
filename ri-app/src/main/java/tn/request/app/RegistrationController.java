@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tn.request.authentication.InvalidConfirmationTokenException;
-import tn.request.authentication.UserAlreadyExistException;
-import tn.request.authentication.user.UserRegistrationData;
-import tn.request.authentication.user.UserRegistrationService;
+import tn.request.domain.user.InvalidConfirmationTokenException;
+import tn.request.domain.user.UserAlreadyExistException;
+import tn.request.domain.user.UserRegistrationData;
+import tn.request.domain.user.UserRegistrationService;
 import tn.request.bazooka.Bazooka;
+import tn.request.domain.user.InvalidConfirmationTokenException;
 
 @RestController
 @RequestMapping("/api/v1")

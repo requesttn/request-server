@@ -43,11 +43,9 @@
             <groupId>
                 tn.request
             </groupId>
-            <artifactId>
-                ri-authentication
-            </artifactId>
+            <artifactId>ri-domain</artifactId>
             <version>
-                0.0.1
+                ${project.version}
             </version>
         </dependency>
         <dependency>

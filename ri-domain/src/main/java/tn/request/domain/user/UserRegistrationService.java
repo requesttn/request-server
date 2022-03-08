@@ -1,4 +1,4 @@
-package tn.request.authentication.user;
+package tn.request.domain.user;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import tn.request.authentication.InvalidConfirmationTokenException;
-import tn.request.authentication.UserAlreadyExistException;
 import tn.request.bazooka.Bazooka;
 import tn.request.bazooka.opt.BazookaOpt;
 import tn.request.data.ConfirmationTokenEntity;
