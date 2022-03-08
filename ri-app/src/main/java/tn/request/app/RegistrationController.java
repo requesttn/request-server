@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tn.request.domain.user.exception.InvalidConfirmationTokenException;
-import tn.request.domain.user.exception.UserAlreadyExistException;
+import tn.request.bazooka.Bazooka;
+import tn.request.data.user.UserEntity;
+import tn.request.domain.auth.UserLoginData;
 import tn.request.domain.auth.UserRegistrationData;
 import tn.request.domain.auth.UserRegistrationService;
-import tn.request.bazooka.Bazooka;
+import tn.request.domain.user.exception.InvalidConfirmationTokenException;
+import tn.request.domain.user.exception.UserAlreadyExistException;
+import tn.request.domain.user.exception.UserNotFoundException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -76,6 +80,32 @@ public class RegistrationController {
             log.error(exception.toString());
             return ResponseEntity.badRequest()
                     .body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody UserLoginData loginDTO) {
+        try {
+            Bazooka.checkIf(isEmailNotValid(loginDTO.getEmail()))
+                    .thenThrow(new InvalidEmailFormatException("Invalid Email: " + loginDTO.getEmail()));
+            UserEntity userData = registrationService.login(loginDTO);
+            return ResponseEntity.ok(userData);
+        }
+        catch (InvalidEmailFormatException invalidEmailFormatException) {
+            log.error(invalidEmailFormatException.toString());
+            return ResponseEntity.badRequest().build();
+        }
+        catch (UserNotFoundException userNotFoundException) {
+            log.error(userNotFoundException.toString());
+            return ResponseEntity.notFound().build();
+        }
+        catch (AuthorizationServiceException authorizationServiceException) {
+            log.error(authorizationServiceException.toString());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        catch (Exception e) {
+            log.error(e.toString());
+            return ResponseEntity.internalServerError().build();
         }
     }
 

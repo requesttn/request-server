@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import tn.request.bazooka.Bazooka;
 import tn.request.bazooka.opt.BazookaOpt;
@@ -19,6 +20,7 @@ import tn.request.domain.auth.mail.ConfirmationEmailSender;
 import tn.request.domain.user.UserEntityMapper;
 import tn.request.domain.user.exception.InvalidConfirmationTokenException;
 import tn.request.domain.user.exception.UserAlreadyExistException;
+import tn.request.domain.user.exception.UserNotFoundException;
 
 @Service
 @AllArgsConstructor
@@ -36,15 +38,15 @@ public class UserRegistrationService {
     /**
      * Register a new user and start the verification process
      */
-    public void registerUser(@NonNull UserRegistrationData userData) {
-        Objects.requireNonNull(userData.getEmail());
-        Objects.requireNonNull(userData.getFirstname());
-        Objects.requireNonNull(userData.getLastname());
+    public void registerUser(@NonNull UserRegistrationData registrationData) {
+        Objects.requireNonNull(registrationData.getEmail());
+        Objects.requireNonNull(registrationData.getFirstname());
+        Objects.requireNonNull(registrationData.getLastname());
 
-        Bazooka.checkIf(userRepository.existsByEmail(userData.getEmail()))
-                .thenThrow(new UserAlreadyExistException(userData.getEmail()));
+        Bazooka.checkIf(userRepository.existsByEmail(registrationData.getEmail()))
+                .thenThrow(new UserAlreadyExistException(registrationData.getEmail()));
 
-        UserEntity user = userRepository.save(userEntityMapper.from(userData));
+        UserEntity user = userRepository.save(userEntityMapper.from(registrationData));
         CompletableFuture.runAsync(() -> sendConfirmationEmailTo(user))
                 .handleAsync((unused, throwable) -> {
                     if (throwable == null) {
@@ -95,5 +97,18 @@ public class UserRegistrationService {
         ConfirmationTokenEntity confirmationToken =
                 new ConfirmationTokenEntity(null, generatedToken, user);
         confirmationTokenRepository.save(confirmationToken);
+    }
+
+    public UserEntity login(UserLoginData loginData) {
+        Objects.requireNonNull(loginData);
+
+        Bazooka.checkIfNot(userRepository.existsByEmail(loginData.getEmail()))
+                .thenThrow(new UserNotFoundException());
+        UserEntity userEntity = userRepository.getUserEntityByEmail(loginData.getEmail());
+
+        Bazooka.checkIfNot(userEntity.isVerified())
+                .thenThrow(new AuthorizationServiceException("User not verified"));
+
+        return userEntity;
     }
 }
