@@ -1,4 +1,4 @@
-package tn.request.data;
+package tn.request.data.auth;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package tn.request.domain.user;
+package tn.request.domain.auth.mail;
 
 import java.util.Objects;
 

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tn.request.domain.user.exception.InvalidConfirmationTokenException;
 import tn.request.domain.user.exception.UserAlreadyExistException;
-import tn.request.domain.user.UserRegistrationData;
-import tn.request.domain.user.UserRegistrationService;
+import tn.request.domain.auth.UserRegistrationData;
+import tn.request.domain.auth.UserRegistrationService;
 import tn.request.bazooka.Bazooka;
 
 @RestController

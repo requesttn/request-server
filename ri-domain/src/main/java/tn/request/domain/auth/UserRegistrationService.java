@@ -1,4 +1,4 @@
-package tn.request.domain.user;
+package tn.request.domain.auth;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -11,10 +11,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import tn.request.bazooka.Bazooka;
 import tn.request.bazooka.opt.BazookaOpt;
-import tn.request.data.ConfirmationTokenEntity;
-import tn.request.data.ConfirmationTokenRepository;
+import tn.request.data.auth.ConfirmationTokenEntity;
+import tn.request.data.auth.ConfirmationTokenRepository;
 import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
+import tn.request.domain.auth.mail.ConfirmationEmailSender;
+import tn.request.domain.user.UserEntityMapper;
 import tn.request.domain.user.exception.InvalidConfirmationTokenException;
 import tn.request.domain.user.exception.UserAlreadyExistException;
 

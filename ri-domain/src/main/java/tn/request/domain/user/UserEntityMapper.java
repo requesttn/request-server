@@ -2,6 +2,7 @@ package tn.request.domain.user;
 
 import org.springframework.stereotype.Component;
 import tn.request.data.user.UserEntity;
+import tn.request.domain.auth.UserRegistrationData;
 
 @Component
 public class UserEntityMapper {
