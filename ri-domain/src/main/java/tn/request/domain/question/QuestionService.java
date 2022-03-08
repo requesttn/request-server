@@ -1,4 +1,4 @@
-package tn.request.questions;
+package tn.request.domain.question;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -11,6 +11,8 @@ import tn.request.data.question.QuestionEntity;
 import tn.request.data.question.QuestionRepository;
 import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
+import tn.request.domain.question.exception.NonVerifiedAskerException;
+import tn.request.domain.question.exception.UnknownAskerException;
 
 @Service
 @AllArgsConstructor

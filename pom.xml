@@ -50,9 +50,6 @@
             ri-data
         </module>
         <module>
-            ri-questions
-        </module>
-        <module>
             ri-domain
         </module>
     </modules>
