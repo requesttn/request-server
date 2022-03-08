@@ -15,6 +15,8 @@ import tn.request.data.ConfirmationTokenEntity;
 import tn.request.data.ConfirmationTokenRepository;
 import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
+import tn.request.domain.user.exception.InvalidConfirmationTokenException;
+import tn.request.domain.user.exception.UserAlreadyExistException;
 
 @Service
 @AllArgsConstructor
