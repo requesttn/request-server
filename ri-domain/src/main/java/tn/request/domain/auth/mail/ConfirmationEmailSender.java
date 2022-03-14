@@ -2,18 +2,22 @@ package tn.request.domain.auth.mail;
 
 import java.util.Objects;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
 public class ConfirmationEmailSender {
     // TODO: Get app url dynamically
-    private final String appUrl = "http://localhost:9555";
+    @Value("${front-end.url}")
+    private String frontEndUrl;
 
     private final JavaMailSender mailSender;
+
+    public ConfirmationEmailSender(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public void send(String recipientEmail, String token) {
         Objects.requireNonNull(recipientEmail);
@@ -26,6 +30,6 @@ public class ConfirmationEmailSender {
     }
 
     private String buildConfirmationLink(String token) {
-        return appUrl + "/api/v1/confirmRegistration?token=" + token;
+        return frontEndUrl + "/account/claim?token=" + token;
     }
 }
