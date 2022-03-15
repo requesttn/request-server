@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tn.request.data.user.UserEntity;
+import tn.request.data.user.UserRepository;
 
 @AllArgsConstructor
 @SpringBootApplication
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 @ComponentScan(basePackages = "tn.request.*")
 public class MainApp implements CommandLineRunner {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private Environment environment;
@@ -36,6 +41,7 @@ public class MainApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println(environment.getProperty("server.port"));
+        userRepository.save(new UserEntity(null, "Test1", "Test", "test1@test.com", true));
+        userRepository.save(new UserEntity(null, "Test2", "Test", "test2@test.com", false));
     }
 }
