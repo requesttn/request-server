@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-Related to user story <!-- user-story-issue-number -->
+Related to user story <!-- #user-story-issue-number -->
