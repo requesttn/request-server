@@ -8,8 +8,8 @@ This guide explains how to set up your environment for development of the server
 Installing Git differes from one operating system to another
 - In Debian-based distros, run `sudo apt-get install git`.
 - In windows, you can either
-  - download the windows [installer](http://git-scm.com/download/win) and run it.
-  - or using [Chocolately](https://chocolatey.org/install), **run as administrator** `choco install git.install -y --params "/GitAndUnixToolsOnPath /WindowsTerminal`.
+  - Download the windows [installer](http://git-scm.com/download/win) and run it.
+  - Use [Chocolately](https://chocolatey.org/install), **run as administrator** `choco install git.install -y --params "/GitAndUnixToolsOnPath /WindowsTerminal`.
 ### IDE
 We suggest [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 ### Mysql
