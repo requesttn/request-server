@@ -19,7 +19,7 @@
     </modelVersion>
 
     <artifactId>
-        ri-common
+        request-common
     </artifactId>
     <version>
         1.0-SNAPSHOT

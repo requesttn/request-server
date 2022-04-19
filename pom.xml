@@ -39,18 +39,24 @@
             15
         </maven.compiler.target>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
     <modules>
         <module>
-            ri-app
+            request-app
         </module>
         <module>
-            ri-common
+            request-common
         </module>
         <module>
-            ri-data
+            request-data
         </module>
         <module>
-            ri-domain
+            request-domain
         </module>
     </modules>
     <dependencyManagement>

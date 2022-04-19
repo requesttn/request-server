@@ -22,16 +22,16 @@
         tn.request
     </groupId>
     <artifactId>
-        ri-data
+        request-data
     </artifactId>
     <version>
         0.0.1-SNAPSHOT
     </version>
     <name>
-        ri-data
+        request-data
     </name>
     <description>
-        ri-data
+        request-data
     </description>
     <dependencies>
         <dependency>

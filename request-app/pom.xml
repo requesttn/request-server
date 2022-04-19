@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-        xmlns="http://maven.apache.org/POM/4.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://maven.apache.org/POM/4.0.0"
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>
         4.0.0
@@ -14,7 +14,7 @@
             spring-boot-starter-parent
         </artifactId>
         <version>
-            2.6.4
+            2.6.4-SNAPSHOT
         </version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
@@ -22,36 +22,38 @@
         tn.request
     </groupId>
     <artifactId>
-        ri-domain
+        request-app
     </artifactId>
     <version>
         0.0.1-SNAPSHOT
     </version>
     <name>
-        ri-domain
+        request-app
     </name>
     <description>
-        ri-domain
+        request-app
     </description>
-
     <dependencies>
         <dependency>
             <groupId>
-                org.springframework.boot
+                tn.request
             </groupId>
-            <artifactId>
-                spring-boot-starter-security
-            </artifactId>
+            <artifactId>request-domain</artifactId>
+            <version>
+                ${project.version}
+            </version>
         </dependency>
         <dependency>
             <groupId>
-                org.springframework.boot
+                tn.request
             </groupId>
             <artifactId>
-                spring-boot-starter-web
+                request-data
             </artifactId>
+            <version>
+                0.0.1-SNAPSHOT
+            </version>
         </dependency>
-
         <dependency>
             <groupId>
                 org.projectlombok
@@ -65,26 +67,18 @@
         </dependency>
         <dependency>
             <groupId>
-                tn.request
+                org.springframework.boot
             </groupId>
             <artifactId>
-                ri-data
+                spring-boot-starter-web
             </artifactId>
-            <version>
-                0.0.1-SNAPSHOT
-            </version>
         </dependency>
         <dependency>
-            <groupId>
-                tn.request
-            </groupId>
-            <artifactId>
-                ri-common
-            </artifactId>
-            <version>
-                1.0-SNAPSHOT
-            </version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.6</version>
         </dependency>
+
         <dependency>
             <groupId>
                 org.springframework.boot
@@ -98,22 +92,14 @@
         </dependency>
         <dependency>
             <groupId>
-                org.springframework.security
-            </groupId>
-            <artifactId>
-                spring-security-test
-            </artifactId>
-            <scope>
-                test
-            </scope>
-        </dependency>
-        <dependency>
-            <groupId>
                 org.springframework.boot
             </groupId>
             <artifactId>
-                spring-boot-starter-mail
+                spring-boot-configuration-processor
             </artifactId>
+            <optional>
+                true
+            </optional>
         </dependency>
         <dependency>
             <groupId>
@@ -126,7 +112,19 @@
                 31.0.1-jre
             </version>
         </dependency>
+        <dependency>
+            <groupId>
+                tn.request
+            </groupId>
+            <artifactId>
+                request-common
+            </artifactId>
+            <version>
+                1.0-SNAPSHOT
+            </version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -151,5 +149,77 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>
+                spring-milestones
+            </id>
+            <name>
+                Spring
+                Milestones
+            </name>
+            <url>
+                https://repo.spring.io/milestone
+            </url>
+            <snapshots>
+                <enabled>
+                    false
+                </enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>
+                spring-snapshots
+            </id>
+            <name>
+                Spring
+                Snapshots
+            </name>
+            <url>
+                https://repo.spring.io/snapshot
+            </url>
+            <releases>
+                <enabled>
+                    false
+                </enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>
+                spring-milestones
+            </id>
+            <name>
+                Spring
+                Milestones
+            </name>
+            <url>
+                https://repo.spring.io/milestone
+            </url>
+            <snapshots>
+                <enabled>
+                    false
+                </enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>
+                spring-snapshots
+            </id>
+            <name>
+                Spring
+                Snapshots
+            </name>
+            <url>
+                https://repo.spring.io/snapshot
+            </url>
+            <releases>
+                <enabled>
+                    false
+                </enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
