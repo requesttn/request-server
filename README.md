@@ -7,13 +7,13 @@ This guide explains how to set up your environment for development of the server
 ### Git
 Installing Git differes from one operating system to another
 - In Debian-based distros, run `sudo apt-get install git`.
-- In windows, you can either
+- In Windows, you can either
   - Download the windows [installer](http://git-scm.com/download/win) and run it.
   - Use [Chocolately](https://chocolatey.org/install), **run as administrator** `choco install git.install -y --params "/GitAndUnixToolsOnPath /WindowsTerminal`.
 ### IDE
-We suggest [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+We recommend [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 ### Mysql
-We suggest [Wamp Server](https://www.wampserver.com/en/) for windows
+We recommend [Wamp Server](https://www.wampserver.com/en/) for Windows
 ### Environnement Variables
 Key | Description
 --- | ---
