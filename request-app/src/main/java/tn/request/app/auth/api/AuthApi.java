@@ -47,7 +47,7 @@ public class AuthApi {
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserRegistrationRequest request) {
         try {
-            Bazooka.checkIf(isEmailNotValid(request.getEmail()))
+            Bazooka.checkIfNot(isEmailValid(request.getEmail()))
                    .thenThrow(new InvalidEmailFormatException("Invalid Email: " + request.getEmail()));
             if (!isPasswordValid(request.getPassword())) {
                 return ResponseEntity.badRequest().build();
@@ -89,7 +89,7 @@ public class AuthApi {
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         try {
-            Bazooka.checkIf(isEmailNotValid(request.getEmail()))
+            Bazooka.checkIf(isEmailValid(request.getEmail()))
                    .thenThrow(new InvalidEmailFormatException("Invalid Email: " + request.getEmail()));
             UserEntity userData = registrationService.login(loginMapper.loginRequestToLoginData(request));
             return ResponseEntity.ok(userData);
@@ -109,9 +109,9 @@ public class AuthApi {
     }
 
     // Based on OWASP validation regular expression
-    private boolean isEmailNotValid(String email) {
+    private boolean isEmailValid(String email) {
         String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return !Pattern.compile(regexEmail)
+        return Pattern.compile(regexEmail)
                        .matcher(email)
                        .matches();
     }
