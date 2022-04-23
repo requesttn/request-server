@@ -7,4 +7,5 @@ assignees: ''
 
 ---
 
-Related to user story <!-- #user-story-issue-number -->
+Related to user story requesttn/request-backlog#
+<!-- For example: Related to user story requesttn/request-backlog#2 -->
