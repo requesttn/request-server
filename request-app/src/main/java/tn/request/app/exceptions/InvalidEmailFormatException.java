@@ -1,4 +1,4 @@
-package tn.request.app;
+package tn.request.app.exceptions;
 
 public class InvalidEmailFormatException extends Exception {
     public InvalidEmailFormatException(String message) {

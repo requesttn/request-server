@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 
 @Entity
 @Getter
@@ -31,24 +32,22 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
 
+    private String password;
+
     private boolean verified;
 
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
         UserEntity that = (UserEntity) o;
-        return getId().equals(that.getId())
-                && Objects.equals(getFirstname(), that.getFirstname())
-                && Objects.equals(getLastname(), that.getLastname())
-                && getEmail().equals(that.getEmail())
-                && that.isVerified() == isVerified();
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail());
+        return getClass().hashCode();
     }
 }

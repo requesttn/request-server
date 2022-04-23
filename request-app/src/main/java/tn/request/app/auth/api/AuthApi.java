@@ -1,4 +1,4 @@
-package tn.request.app;
+package tn.request.app.auth.api;
 
 import java.util.regex.Pattern;
 
@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tn.request.app.auth.dto.LoginRequest;
+import tn.request.app.auth.dto.UserRegistrationRequest;
+import tn.request.app.auth.mapper.LoginCredentialsMapper;
+import tn.request.app.auth.mapper.UserRegistrationMapper;
+import tn.request.app.exceptions.InvalidEmailFormatException;
 import tn.request.bazooka.Bazooka;
 import tn.request.data.user.UserEntity;
-import tn.request.domain.auth.UserLoginData;
-import tn.request.domain.auth.UserRegistrationData;
 import tn.request.domain.auth.UserRegistrationService;
 import tn.request.domain.user.exception.InvalidConfirmationTokenException;
 import tn.request.domain.user.exception.UserAlreadyExistException;
@@ -31,37 +34,38 @@ import tn.request.domain.user.exception.UserNotFoundException;
 @RequestMapping("/api/v1")
 @AllArgsConstructor
 @Slf4j
-public class RegistrationController {
+public class AuthApi {
 
     private UserRegistrationService registrationService;
+    private LoginCredentialsMapper loginMapper;
+    private UserRegistrationMapper userRegistrationMapper;
 
     @Operation(summary = "Create a new user and send a confirmation link to user email.")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
     @ApiResponse(responseCode = "400", description = "Invalid email format", content = {@Content(mediaType = "application/json")})
     @ApiResponse(responseCode = "409", description = "User already registered", content = {@Content(mediaType = "application/json")})
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody UserRegistrationData userData) {
+    public ResponseEntity<Object> register(@RequestBody UserRegistrationRequest request) {
         try {
-            Bazooka.checkIf(isEmailNotValid(userData.getEmail()))
-                    .thenThrow(new InvalidEmailFormatException("Invalid Email: " + userData.getEmail()));
-
-            registrationService.registerUser(userData);
-            return ResponseEntity.ok(userData);
-        }
-        catch (InvalidEmailFormatException invalidEmailFormatException) {
+            Bazooka.checkIf(isEmailNotValid(request.getEmail()))
+                   .thenThrow(new InvalidEmailFormatException("Invalid Email: " + request.getEmail()));
+            if (!isPasswordValid(request.getPassword())) {
+                return ResponseEntity.badRequest().build();
+            }
+            registrationService.registerUser(userRegistrationMapper.userRegistrationRequestToUserRegistrationData(request));
+            return ResponseEntity.ok(request);
+        } catch (InvalidEmailFormatException invalidEmailFormatException) {
             log.error(invalidEmailFormatException.toString());
             return new ResponseEntity<>("Invalid Email", HttpStatus.BAD_REQUEST);
-        }
-        catch (UserAlreadyExistException userAlreadyExistException) {
+        } catch (UserAlreadyExistException userAlreadyExistException) {
             log.error(userAlreadyExistException.toString());
             return new ResponseEntity<>(String.format("Email '%s' already exists, please select another email",
-                                                      userData.getEmail()), HttpStatus.CONFLICT);
-        }
-        catch (Exception exception) {
+                    request.getEmail()), HttpStatus.CONFLICT);
+        } catch (Exception exception) {
             log.error(exception.toString());
         }
         return ResponseEntity.badRequest()
-                .build();
+                             .build();
     }
 
     @Operation(summary = "Confirm user email")
@@ -71,39 +75,34 @@ public class RegistrationController {
     public ResponseEntity<Object> confirmEmail(@RequestParam("token") String token) {
         try {
             Bazooka.checkIf(Strings.isNullOrEmpty(token))
-                    .thenThrow(new IllegalArgumentException("Confirmation token cannot be empty"));
+                   .thenThrow(new IllegalArgumentException("Confirmation token cannot be empty"));
 
             registrationService.confirmEmail(token);
             return ResponseEntity.ok("<h1>Registration Confirmed Successfully</h1");
-        }
-        catch (IllegalArgumentException | InvalidConfirmationTokenException exception) {
+        } catch (IllegalArgumentException | InvalidConfirmationTokenException exception) {
             log.error(exception.toString());
             return ResponseEntity.badRequest()
-                    .body(exception.getMessage());
+                                 .body(exception.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody UserLoginData loginDTO) {
+    public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         try {
-            Bazooka.checkIf(isEmailNotValid(loginDTO.getEmail()))
-                    .thenThrow(new InvalidEmailFormatException("Invalid Email: " + loginDTO.getEmail()));
-            UserEntity userData = registrationService.login(loginDTO);
+            Bazooka.checkIf(isEmailNotValid(request.getEmail()))
+                   .thenThrow(new InvalidEmailFormatException("Invalid Email: " + request.getEmail()));
+            UserEntity userData = registrationService.login(loginMapper.loginRequestToLoginData(request));
             return ResponseEntity.ok(userData);
-        }
-        catch (InvalidEmailFormatException invalidEmailFormatException) {
+        } catch (InvalidEmailFormatException invalidEmailFormatException) {
             log.error(invalidEmailFormatException.toString());
             return ResponseEntity.badRequest().build();
-        }
-        catch (UserNotFoundException userNotFoundException) {
+        } catch (UserNotFoundException userNotFoundException) {
             log.error(userNotFoundException.toString());
             return ResponseEntity.notFound().build();
-        }
-        catch (AuthorizationServiceException authorizationServiceException) {
+        } catch (AuthorizationServiceException authorizationServiceException) {
             log.error(authorizationServiceException.toString());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.toString());
             return ResponseEntity.internalServerError().build();
         }
@@ -113,7 +112,13 @@ public class RegistrationController {
     private boolean isEmailNotValid(String email) {
         String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return !Pattern.compile(regexEmail)
-                .matcher(email)
-                .matches();
+                       .matcher(email)
+                       .matches();
+    }
+
+    private boolean isPasswordValid(String password) {
+        return !password.isEmpty() &&
+                password.chars().noneMatch(Character::isWhitespace) &&
+                password.length() >= 8 && password.length() <= 24;
     }
 }

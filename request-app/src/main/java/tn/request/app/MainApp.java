@@ -41,7 +41,7 @@ public class MainApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        userRepository.save(new UserEntity(null, "Test1", "Test", "test1@test.com", true));
-        userRepository.save(new UserEntity(null, "Test2", "Test", "test2@test.com", false));
+        userRepository.save(new UserEntity(null, "Test1", "Test", "test1@test.com", "123", true));
+        userRepository.save(new UserEntity(null, "Test2", "Test", "test2@test.com", "123", false));
     }
 }

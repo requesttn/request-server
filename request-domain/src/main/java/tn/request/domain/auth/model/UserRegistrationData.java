@@ -1,4 +1,4 @@
-package tn.request.domain.auth;
+package tn.request.domain.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,4 +11,5 @@ public class UserRegistrationData {
     private String firstname;
     private String lastname;
     private String email;
+    private String password;
 }

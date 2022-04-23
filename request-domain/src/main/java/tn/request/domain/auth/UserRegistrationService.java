@@ -17,7 +17,9 @@ import tn.request.data.auth.ConfirmationTokenRepository;
 import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
 import tn.request.domain.auth.mail.ConfirmationEmailSender;
-import tn.request.domain.user.UserEntityMapper;
+import tn.request.domain.auth.mapper.UserMapper;
+import tn.request.domain.auth.model.LoginData;
+import tn.request.domain.auth.model.UserRegistrationData;
 import tn.request.domain.user.exception.InvalidConfirmationTokenException;
 import tn.request.domain.user.exception.UserAlreadyExistException;
 import tn.request.domain.user.exception.UserNotFoundException;
@@ -31,7 +33,7 @@ public class UserRegistrationService {
 
     private ConfirmationEmailSender confirmationEmailSender;
 
-    private UserEntityMapper userEntityMapper;
+    private UserMapper userEntityMapper;
 
     private ConfirmationTokenRepository confirmationTokenRepository;
 
@@ -99,7 +101,7 @@ public class UserRegistrationService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
-    public UserEntity login(UserLoginData loginData) {
+    public UserEntity login(LoginData loginData) {
         Objects.requireNonNull(loginData);
 
         Bazooka.checkIfNot(userRepository.existsByEmail(loginData.getEmail()))

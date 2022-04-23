@@ -1,4 +1,4 @@
-package tn.request.domain.auth;
+package tn.request.domain.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserLoginData {
+public class LoginData {
     private String email;
+    private String password;
 }

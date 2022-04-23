@@ -1,14 +1,14 @@
-package tn.request.domain.user;
+package tn.request.domain.auth.mapper;
 
 import org.springframework.stereotype.Component;
 import tn.request.data.user.UserEntity;
-import tn.request.domain.auth.UserRegistrationData;
+import tn.request.domain.auth.model.UserRegistrationData;
 
 @Component
-public class UserEntityMapper {
+public class UserMapper {
     public UserRegistrationData to(UserEntity userEntity) {
         return new UserRegistrationData(
-                userEntity.getFirstname(), userEntity.getLastname(), userEntity.getEmail());
+                userEntity.getFirstname(), userEntity.getLastname(), userEntity.getEmail(), userEntity.getPassword());
     }
 
     /**
@@ -17,6 +17,6 @@ public class UserEntityMapper {
      */
     public UserEntity from(UserRegistrationData userData) {
         return new UserEntity(
-                null, userData.getFirstname(), userData.getLastname(), userData.getEmail(), false);
+                null, userData.getFirstname(), userData.getLastname(), userData.getEmail(), userData.getPassword(), false);
     }
 }
