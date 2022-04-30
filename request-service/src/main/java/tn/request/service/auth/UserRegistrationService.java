@@ -4,13 +4,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
-import tn.request.bazooka.Bazooka;
 import tn.request.bazooka.opt.BazookaOpt;
 import tn.request.data.auth.ConfirmationTokenEntity;
 import tn.request.data.auth.ConfirmationTokenRepository;
@@ -20,9 +20,7 @@ import tn.request.service.auth.mail.ConfirmationEmailSender;
 import tn.request.service.auth.mapper.UserMapper;
 import tn.request.service.auth.model.LoginData;
 import tn.request.service.auth.model.UserRegistrationData;
-import tn.request.service.user.exception.InvalidConfirmationTokenException;
-import tn.request.service.user.exception.UserAlreadyExistException;
-import tn.request.service.user.exception.UserNotFoundException;
+import tn.request.service.question.exception.RequestException;
 
 @Service
 @AllArgsConstructor
@@ -41,39 +39,51 @@ public class UserRegistrationService {
      * Register a new user and start the verification process
      */
     public void registerUser(@NonNull UserRegistrationData registrationData) {
-        Objects.requireNonNull(registrationData.getEmail());
-        Objects.requireNonNull(registrationData.getFirstname());
-        Objects.requireNonNull(registrationData.getLastname());
+        Objects.requireNonNull(registrationData.getEmail(), "Email is required");
+        Objects.requireNonNull(registrationData.getFirstname(), "Firstname is required");
+        Objects.requireNonNull(registrationData.getLastname(), "Lastname is required");
 
-        Bazooka.checkIf(userRepository.existsByEmail(registrationData.getEmail()))
-                .thenThrow(new UserAlreadyExistException(registrationData.getEmail()));
+        if (isEmailInvalid(registrationData.getEmail())) {
+            throw new RequestException(HttpStatus.BAD_REQUEST, "Email is invalid");
+        }
+
+        if (userRepository.existsByEmail(registrationData.getEmail())) {
+            throw new RequestException(HttpStatus.CONFLICT, "A user with the same email already exist");
+        }
+
+        if (isPasswordInvalid(registrationData.getPassword())) {
+            throw new RequestException(HttpStatus.BAD_REQUEST, "Password is invalid");
+        }
 
         UserEntity user = userRepository.save(userEntityMapper.from(registrationData));
         CompletableFuture.runAsync(() -> sendConfirmationEmailTo(user))
-                .handleAsync((unused, throwable) -> {
-                    if (throwable == null) {
-                        log.info("Confirmation email sent successfully to '{}'", user.getEmail());
-                    } else {
-                        log.error(
-                                "Error while sending confirmation email to '{}': {}",
-                                user.getEmail(),
-                                throwable.toString());
-                    }
-                    return null;
-                });
+                         .handleAsync((unused, throwable) -> {
+                             if (throwable == null) {
+                                 log.info("Confirmation email sent successfully to '{}'", user.getEmail());
+                             } else {
+                                 log.error(
+                                         "Error while sending confirmation email to '{}': {}",
+                                         user.getEmail(),
+                                         throwable.toString());
+                             }
+                             return null;
+                         });
     }
 
     public void confirmEmail(@NonNull String token) {
+        Objects.requireNonNull(token, "Confirmation token is required");
+
         Optional<ConfirmationTokenEntity> confirmationTokenOpt =
                 confirmationTokenRepository.findByToken(token);
 
         ConfirmationTokenEntity confirmationToken =
                 BazookaOpt.checkIfEmpty(confirmationTokenOpt)
-                        .thenThrow(new InvalidConfirmationTokenException("Invalid Token: " + token))
-                        .orElseGet();
+                          .thenThrow(new RequestException(HttpStatus.BAD_REQUEST, "Account confirmation token is invalid"))
+                          .orElseGet();
 
-        Bazooka.checkIf(confirmationToken.isExpired())
-                .thenThrow(new InvalidConfirmationTokenException("Token Expired: " + confirmationToken));
+        if (confirmationToken.isExpired()) {
+            throw new RequestException("Account confirmation token is expired");
+        }
 
         doConfirmEmail(confirmationToken);
     }
@@ -94,7 +104,7 @@ public class UserRegistrationService {
 
     private void sendConfirmationEmailTo(UserEntity user) {
         String generatedToken = UUID.randomUUID()
-                .toString();
+                                    .toString();
         confirmationEmailSender.send(user.getEmail(), generatedToken);
         ConfirmationTokenEntity confirmationToken =
                 new ConfirmationTokenEntity(null, generatedToken, user);
@@ -104,13 +114,30 @@ public class UserRegistrationService {
     public UserEntity login(LoginData loginData) {
         Objects.requireNonNull(loginData);
 
-        Bazooka.checkIfNot(userRepository.existsByEmail(loginData.getEmail()))
-                .thenThrow(new UserNotFoundException());
+        if (!userRepository.existsByEmail(loginData.getEmail())) {
+            throw new RequestException(HttpStatus.NOT_FOUND, "The provided email doesn't belong to any user");
+        }
+
         UserEntity userEntity = userRepository.getUserEntityByEmail(loginData.getEmail());
 
-        Bazooka.checkIfNot(userEntity.isVerified())
-                .thenThrow(new AuthorizationServiceException("User not verified"));
+        if (!userEntity.isVerified()) {
+            throw new RequestException(HttpStatus.UNAUTHORIZED, "User account is not confirmed yet");
+        }
 
         return userEntity;
+    }
+
+    // Based on OWASP validation regular expression
+    private boolean isEmailInvalid(String email) {
+        String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return !Pattern.compile(regexEmail)
+                       .matcher(email)
+                       .matches();
+    }
+
+    private boolean isPasswordInvalid(String password) {
+        return !(!password.isEmpty() &&
+                password.chars().noneMatch(Character::isWhitespace) &&
+                password.length() >= 8 && password.length() <= 24);
     }
 }

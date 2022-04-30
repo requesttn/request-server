@@ -2,10 +2,16 @@ package tn.request.app.error;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+
+@Getter
+@Setter
 public class ApiError {
 
     @JsonIgnore
@@ -13,13 +19,12 @@ public class ApiError {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
-    private String debugMessage;
 
-    private ApiError() {
+    public ApiError() {
         timestamp = LocalDateTime.now();
     }
 
-    ApiError(HttpStatus errorCode) {
+    public ApiError(HttpStatus errorCode) {
         this();
         this.errorCode = errorCode;
     }
@@ -27,15 +32,13 @@ public class ApiError {
     public ApiError(HttpStatus errorCode, Throwable ex) {
         this();
         this.errorCode = errorCode;
-        this.message = "Unexpected error";
-        this.debugMessage = ex.getLocalizedMessage();
+        this.message = ex.getMessage();
     }
 
-    ApiError(HttpStatus errorCode, String message, Throwable ex) {
+    public ApiError(HttpStatus errorCode, String message, Throwable ex) {
         this();
         this.errorCode = errorCode;
         this.message = message;
-        this.debugMessage = ex.getLocalizedMessage();
     }
 
     public HttpStatus getErrorCode() {

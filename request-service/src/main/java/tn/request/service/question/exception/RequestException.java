@@ -1,4 +1,4 @@
-package tn.request.app.exceptions;
+package tn.request.service.question.exception;
 
 import org.springframework.http.HttpStatus;
 
