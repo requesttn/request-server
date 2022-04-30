@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tn.request.domain.user.UserService;
-import tn.request.domain.user.exception.UserNotFoundException;
+import tn.request.service.user.UserService;
+import tn.request.service.user.exception.UserNotFoundException;
 
 @AllArgsConstructor
 @Slf4j

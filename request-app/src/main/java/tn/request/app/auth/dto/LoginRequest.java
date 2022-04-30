@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import tn.request.domain.auth.model.LoginData;
+import tn.request.service.auth.model.LoginData;
 
 @AllArgsConstructor
 @Getter

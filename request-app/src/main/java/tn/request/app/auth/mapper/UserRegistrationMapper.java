@@ -2,7 +2,7 @@ package tn.request.app.auth.mapper;
 
 import org.springframework.stereotype.Component;
 import tn.request.app.auth.dto.UserRegistrationRequest;
-import tn.request.domain.auth.model.UserRegistrationData;
+import tn.request.service.auth.model.UserRegistrationData;
 
 @Component
 public class UserRegistrationMapper {

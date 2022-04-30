@@ -1,4 +1,4 @@
-package tn.request.domain.question;
+package tn.request.service.question;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

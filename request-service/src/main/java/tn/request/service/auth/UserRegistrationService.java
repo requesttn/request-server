@@ -1,4 +1,4 @@
-package tn.request.domain.auth;
+package tn.request.service.auth;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -16,13 +16,13 @@ import tn.request.data.auth.ConfirmationTokenEntity;
 import tn.request.data.auth.ConfirmationTokenRepository;
 import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
-import tn.request.domain.auth.mail.ConfirmationEmailSender;
-import tn.request.domain.auth.mapper.UserMapper;
-import tn.request.domain.auth.model.LoginData;
-import tn.request.domain.auth.model.UserRegistrationData;
-import tn.request.domain.user.exception.InvalidConfirmationTokenException;
-import tn.request.domain.user.exception.UserAlreadyExistException;
-import tn.request.domain.user.exception.UserNotFoundException;
+import tn.request.service.auth.mail.ConfirmationEmailSender;
+import tn.request.service.auth.mapper.UserMapper;
+import tn.request.service.auth.model.LoginData;
+import tn.request.service.auth.model.UserRegistrationData;
+import tn.request.service.user.exception.InvalidConfirmationTokenException;
+import tn.request.service.user.exception.UserAlreadyExistException;
+import tn.request.service.user.exception.UserNotFoundException;
 
 @Service
 @AllArgsConstructor

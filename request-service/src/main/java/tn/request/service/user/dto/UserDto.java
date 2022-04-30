@@ -1,4 +1,4 @@
-package tn.request.domain.user.dto;
+package tn.request.service.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

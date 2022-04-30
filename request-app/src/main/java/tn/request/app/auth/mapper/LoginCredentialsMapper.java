@@ -2,7 +2,7 @@ package tn.request.app.auth.mapper;
 
 import org.springframework.stereotype.Component;
 import tn.request.app.auth.dto.LoginRequest;
-import tn.request.domain.auth.model.LoginData;
+import tn.request.service.auth.model.LoginData;
 
 @Component
 public class LoginCredentialsMapper {

@@ -1,12 +1,12 @@
-package tn.request.domain.user;
+package tn.request.service.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import tn.request.bazooka.opt.BazookaOpt;
 import tn.request.data.user.UserRepository;
-import tn.request.domain.user.dto.UserDto;
-import tn.request.domain.user.exception.UserNotFoundException;
+import tn.request.service.user.dto.UserDto;
+import tn.request.service.user.exception.UserNotFoundException;
 
 @AllArgsConstructor
 @Service

@@ -1,15 +1,15 @@
-package tn.request.domain.auth.model;
+package tn.request.service.auth.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegistrationData {
-    private String firstname;
-    private String lastname;
+@ToString
+public class LoginData {
     private String email;
     private String password;
 }

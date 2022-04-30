@@ -1,8 +1,8 @@
-package tn.request.domain.auth.mapper;
+package tn.request.service.auth.mapper;
 
 import org.springframework.stereotype.Component;
 import tn.request.data.user.UserEntity;
-import tn.request.domain.auth.model.UserRegistrationData;
+import tn.request.service.auth.model.UserRegistrationData;
 
 @Component
 public class UserMapper {

@@ -1,4 +1,4 @@
-package tn.request.domain.security;
+package tn.request.service.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

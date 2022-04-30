@@ -1,4 +1,4 @@
-package tn.request.domain.question.exception;
+package tn.request.service.question.exception;
 
 public class NonVerifiedAskerException extends RuntimeException {
     public NonVerifiedAskerException(String message) {

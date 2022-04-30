@@ -1,4 +1,4 @@
-package tn.request.domain.user.exception;
+package tn.request.service.user.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {

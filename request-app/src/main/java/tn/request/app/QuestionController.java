@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tn.request.domain.question.QuestionData;
-import tn.request.domain.question.QuestionService;
-import tn.request.domain.question.exception.NonVerifiedAskerException;
-import tn.request.domain.question.exception.UnknownAskerException;
+import tn.request.service.question.QuestionData;
+import tn.request.service.question.QuestionService;
+import tn.request.service.question.exception.NonVerifiedAskerException;
+import tn.request.service.question.exception.UnknownAskerException;
 
 @RestController
 @RequestMapping("/api/v1/questions")
