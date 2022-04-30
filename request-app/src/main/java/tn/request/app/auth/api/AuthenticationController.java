@@ -32,8 +32,8 @@ public class AuthenticationController {
 
     @Operation(summary = "Create a new user and send a confirmation link to user email.")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "400", description = "Invalid email format", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "409", description = "User already registered", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "400", description = "Invalid request", content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "409", description = "A user already registered with the same email", content = {@Content(mediaType = "application/json")})
     @PostMapping("/register")
     public ResponseEntity<UserRegistrationRequest> register(@RequestBody UserRegistrationRequest request) {
         registrationService.registerUser(userRegistrationMapper.userRegistrationRequestToUserRegistrationData(request));
