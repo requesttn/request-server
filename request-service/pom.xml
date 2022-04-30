@@ -25,7 +25,7 @@
         request-service
     </artifactId>
     <version>
-        0.0.1-SNAPSHOT
+        0.0.1
     </version>
     <name>
         request-service
@@ -71,7 +71,7 @@
                 request-data
             </artifactId>
             <version>
-                0.0.1-SNAPSHOT
+                0.0.1
             </version>
         </dependency>
         <dependency>
@@ -82,7 +82,7 @@
                 request-common
             </artifactId>
             <version>
-                1.0-SNAPSHOT
+                0.0.1
             </version>
         </dependency>
         <dependency>
@@ -137,6 +137,7 @@
                     spring-boot-maven-plugin
                 </artifactId>
                 <configuration>
+                    <skip>true</skip>
                     <excludes>
                         <exclude>
                             <groupId>

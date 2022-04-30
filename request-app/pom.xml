@@ -25,7 +25,7 @@
         request-app
     </artifactId>
     <version>
-        0.0.1-SNAPSHOT
+        0.0.1
     </version>
     <name>
         request-app
@@ -51,7 +51,7 @@
                 request-data
             </artifactId>
             <version>
-                0.0.1-SNAPSHOT
+                0.0.1
             </version>
         </dependency>
         <dependency>
@@ -120,7 +120,7 @@
                 request-common
             </artifactId>
             <version>
-                1.0-SNAPSHOT
+                0.0.1
             </version>
         </dependency>
     </dependencies>
