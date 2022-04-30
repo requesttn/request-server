@@ -25,16 +25,16 @@ import tn.request.app.auth.mapper.UserRegistrationMapper;
 import tn.request.app.exceptions.InvalidEmailFormatException;
 import tn.request.bazooka.Bazooka;
 import tn.request.data.user.UserEntity;
-import tn.request.domain.auth.UserRegistrationService;
-import tn.request.domain.user.exception.InvalidConfirmationTokenException;
-import tn.request.domain.user.exception.UserAlreadyExistException;
-import tn.request.domain.user.exception.UserNotFoundException;
+import tn.request.service.auth.UserRegistrationService;
+import tn.request.service.user.exception.InvalidConfirmationTokenException;
+import tn.request.service.user.exception.UserAlreadyExistException;
+import tn.request.service.user.exception.UserNotFoundException;
 
 @RestController
 @RequestMapping("/api/v1")
 @AllArgsConstructor
 @Slf4j
-public class AuthApi {
+public class AuthenticationController {
 
     private UserRegistrationService registrationService;
     private LoginCredentialsMapper loginMapper;

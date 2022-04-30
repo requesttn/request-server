@@ -22,16 +22,16 @@
         tn.request
     </groupId>
     <artifactId>
-        request-domain
+        request-service
     </artifactId>
     <version>
         0.0.1-SNAPSHOT
     </version>
     <name>
-        request-domain
+        request-service
     </name>
     <description>
-        request-domain
+        request-service
     </description>
 
     <dependencies>

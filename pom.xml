@@ -56,7 +56,7 @@
             request-data
         </module>
         <module>
-            request-domain
+            request-service
         </module>
     </modules>
     <dependencyManagement>

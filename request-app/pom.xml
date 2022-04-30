@@ -38,7 +38,7 @@
             <groupId>
                 tn.request
             </groupId>
-            <artifactId>request-domain</artifactId>
+            <artifactId>request-service</artifactId>
             <version>
                 ${project.version}
             </version>
