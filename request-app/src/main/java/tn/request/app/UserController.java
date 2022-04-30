@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tn.request.service.user.UserService;
-import tn.request.service.user.exception.UserNotFoundException;
+import tn.request.service.user.dto.UserDto;
 
 @AllArgsConstructor
 @Slf4j
@@ -19,17 +19,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(userService.getUserById(id));
-        }
-        catch (UserNotFoundException userNotFoundException) {
-            log.error("User not found: " + id, userNotFoundException);
-            return ResponseEntity.notFound().build();
-        }
-        catch (Exception e) {
-            log.error("Unknown error", e);
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 }

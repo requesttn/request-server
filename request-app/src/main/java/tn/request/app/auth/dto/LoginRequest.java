@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import tn.request.service.auth.model.LoginData;
 
 @AllArgsConstructor
 @Getter
@@ -15,8 +14,4 @@ import tn.request.service.auth.model.LoginData;
 public class LoginRequest {
     private String email;
     private String password;
-
-    public LoginRequest(LoginData userLoginData) {
-        this(userLoginData.getEmail(), userLoginData.getPassword());
-    }
 }
