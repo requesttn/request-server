@@ -1,12 +1,8 @@
 package tn.request.app.auth.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +23,6 @@ import tn.request.service.auth.UserRegistrationService;
 public class AuthenticationController implements IAuthenticationController {
 
     private UserRegistrationService registrationService;
-    private LoginCredentialsMapper loginMapper;
     private UserRegistrationMapper userRegistrationMapper;
 
     @Override
@@ -47,7 +42,7 @@ public class AuthenticationController implements IAuthenticationController {
     @Override
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
-        UserEntity loginResponse = registrationService.login(loginMapper.loginRequestToLoginData(request));
+        UserEntity loginResponse = registrationService.login(request.getEmail(), request.getPassword());
         return ResponseEntity.ok(loginResponse);
     }
 }

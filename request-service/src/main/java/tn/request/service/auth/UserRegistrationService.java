@@ -18,8 +18,7 @@ import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
 import tn.request.service.auth.mail.ConfirmationEmailSender;
 import tn.request.service.auth.mapper.UserMapper;
-import tn.request.service.auth.model.LoginData;
-import tn.request.service.auth.model.UserRegistrationData;
+import tn.request.service.auth.model.User;
 import tn.request.service.question.exception.RequestException;
 
 @Service
@@ -38,7 +37,7 @@ public class UserRegistrationService {
     /**
      * Register a new user and start the verification process
      */
-    public void registerUser(@NonNull UserRegistrationData registrationData) {
+    public void registerUser(@NonNull User registrationData) {
         Objects.requireNonNull(registrationData.getEmail(), "Email is required");
         Objects.requireNonNull(registrationData.getFirstname(), "Firstname is required");
         Objects.requireNonNull(registrationData.getLastname(), "Lastname is required");
@@ -111,14 +110,15 @@ public class UserRegistrationService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
-    public UserEntity login(LoginData loginData) {
-        Objects.requireNonNull(loginData);
+    public UserEntity login(String email, String password) {
+        Objects.requireNonNull(email);
+        Objects.requireNonNull(password);
 
-        if (!userRepository.existsByEmail(loginData.getEmail())) {
+        if (!userRepository.existsByEmail(email)) {
             throw new RequestException(HttpStatus.NOT_FOUND, "The provided email doesn't belong to any user");
         }
 
-        UserEntity userEntity = userRepository.getUserEntityByEmail(loginData.getEmail());
+        UserEntity userEntity = userRepository.getUserEntityByEmail(email);
 
         if (!userEntity.isVerified()) {
             throw new RequestException(HttpStatus.UNAUTHORIZED, "User account is not confirmed yet");
