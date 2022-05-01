@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tn.request.app.auth.dto.LoginRequest;
-import tn.request.app.auth.dto.UserRegistrationRequest;
-import tn.request.app.auth.mapper.LoginCredentialsMapper;
+import tn.request.app.auth.dto.RegisterUserRequest;
 import tn.request.app.auth.mapper.UserRegistrationMapper;
-import tn.request.data.user.UserEntity;
-import tn.request.service.auth.UserRegistrationService;
+import tn.request.service.auth.AuthenticationService;
+import tn.request.service.auth.model.User;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,27 +21,27 @@ import tn.request.service.auth.UserRegistrationService;
 @Slf4j
 public class AuthenticationController implements IAuthenticationController {
 
-    private UserRegistrationService registrationService;
+    private AuthenticationService authenticationService;
     private UserRegistrationMapper userRegistrationMapper;
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<UserRegistrationRequest> register(@RequestBody UserRegistrationRequest request) {
-        registrationService.registerUser(userRegistrationMapper.userRegistrationRequestToUserRegistrationData(request));
+    public ResponseEntity<RegisterUserRequest> register(@RequestBody RegisterUserRequest request) {
+        authenticationService.register(userRegistrationMapper.toUser(request));
         return ResponseEntity.ok(request);
     }
 
     @Override
     @GetMapping("/confirmRegistration")
-    public ResponseEntity<Object> confirmEmail(@RequestParam("token") String token) {
-        registrationService.confirmEmail(token);
-        return ResponseEntity.ok("<h1>Registration Confirmed Successfully</h1");
+    public ResponseEntity<Object> activateAccount(@RequestParam("token") String token) {
+        authenticationService.validateTokenAndActivateAccount(token);
+        return ResponseEntity.ok().build();
     }
 
     @Override
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
-        UserEntity loginResponse = registrationService.login(request.getEmail(), request.getPassword());
+        User loginResponse = authenticationService.login(request.getEmail(), request.getPassword());
         return ResponseEntity.ok(loginResponse);
     }
 }

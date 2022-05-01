@@ -34,7 +34,7 @@ public class UserEntity {
 
     private String password;
 
-    private boolean verified;
+    private boolean accountActivated;
 
     @Override
     public boolean equals(Object o) {

@@ -24,54 +24,80 @@ import tn.request.service.question.exception.RequestException;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserRegistrationService {
+public class AuthenticationService {
 
     private UserRepository userRepository;
 
     private ConfirmationEmailSender confirmationEmailSender;
 
-    private UserMapper userEntityMapper;
+    private UserMapper userMapper;
 
     private ConfirmationTokenRepository confirmationTokenRepository;
 
     /**
-     * Register a new user and start the verification process
+     * Save
+     * user
+     * data
+     * in
+     * the
+     * database
+     * and
+     * send
+     * a
+     * confirmation
+     * link
+     * to
+     * his
+     * email
      */
-    public void registerUser(@NonNull User registrationData) {
-        Objects.requireNonNull(registrationData.getEmail(), "Email is required");
-        Objects.requireNonNull(registrationData.getFirstname(), "Firstname is required");
-        Objects.requireNonNull(registrationData.getLastname(), "Lastname is required");
+    public void register(@NonNull User user) {
+        Objects.requireNonNull(user.getEmail(), "Email is required");
+        Objects.requireNonNull(user.getFirstname(), "Firstname is required");
+        Objects.requireNonNull(user.getLastname(), "Lastname is required");
 
-        if (isEmailInvalid(registrationData.getEmail())) {
+        if (isEmailInvalid(user.getEmail())) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "Email is invalid");
         }
 
-        if (userRepository.existsByEmail(registrationData.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new RequestException(HttpStatus.CONFLICT, "A user with the same email already exist");
         }
 
-        if (isPasswordInvalid(registrationData.getPassword())) {
+        if (isPasswordInvalid(user.getPassword())) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "Password is invalid");
         }
 
-        UserEntity user = userRepository.save(userEntityMapper.from(registrationData));
-        CompletableFuture.runAsync(() -> sendConfirmationEmailTo(user))
+        UserEntity userEntity = userRepository.save(userMapper.toUserEntity(user));
+
+        CompletableFuture.runAsync(() -> sendConfirmationEmailTo(userEntity))
                          .handleAsync((unused, throwable) -> {
                              if (throwable == null) {
-                                 log.info("Confirmation email sent successfully to '{}'", user.getEmail());
+                                 log.info("Confirmation email sent successfully to '{}'", userEntity.getEmail());
                              } else {
                                  log.error(
                                          "Error while sending confirmation email to '{}': {}",
-                                         user.getEmail(),
+                                         userEntity.getEmail(),
                                          throwable.toString());
                              }
                              return null;
                          });
     }
 
-    public void confirmEmail(@NonNull String token) {
+    public void validateTokenAndActivateAccount(@NonNull String token) {
         Objects.requireNonNull(token, "Confirmation token is required");
+        validateToken(token).ifPresent(this::activateAccount);
+    }
 
+    /**
+     * Ensure
+     * token
+     * is
+     * valid
+     * and
+     * not
+     * expired
+     */
+    private Optional<ConfirmationTokenEntity> validateToken(String token) {
         Optional<ConfirmationTokenEntity> confirmationTokenOpt =
                 confirmationTokenRepository.findByToken(token);
 
@@ -83,22 +109,21 @@ public class UserRegistrationService {
         if (confirmationToken.isExpired()) {
             throw new RequestException("Account confirmation token is expired");
         }
-
-        doConfirmEmail(confirmationToken);
+        return confirmationTokenOpt;
     }
 
-    private void doConfirmEmail(ConfirmationTokenEntity confirmationToken) {
+    private void activateAccount(ConfirmationTokenEntity confirmationToken) {
         Objects.requireNonNull(confirmationToken);
         Objects.requireNonNull(confirmationToken.getUser());
         Objects.requireNonNull(confirmationToken.getToken());
 
         UserEntity confirmedUser = confirmationToken.getUser();
-        confirmedUser.setVerified(true);
+        confirmedUser.setAccountActivated(true);
         userRepository.save(confirmedUser);
 
         confirmationTokenRepository.delete(confirmationToken);
 
-        log.info("Email Confirmed Successfully: " + confirmationToken.getUser().getEmail());
+        log.info("Account '{}' activated successfully.", confirmationToken.getUser().getEmail());
     }
 
     private void sendConfirmationEmailTo(UserEntity user) {
@@ -110,7 +135,7 @@ public class UserRegistrationService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
-    public UserEntity login(String email, String password) {
+    public User login(String email, String password) {
         Objects.requireNonNull(email);
         Objects.requireNonNull(password);
 
@@ -120,11 +145,11 @@ public class UserRegistrationService {
 
         UserEntity userEntity = userRepository.getUserEntityByEmail(email);
 
-        if (!userEntity.isVerified()) {
+        if (!userEntity.isAccountActivated()) {
             throw new RequestException(HttpStatus.UNAUTHORIZED, "User account is not confirmed yet");
         }
 
-        return userEntity;
+        return userMapper.fromUserEntity(userEntity);
     }
 
     // Based on OWASP validation regular expression

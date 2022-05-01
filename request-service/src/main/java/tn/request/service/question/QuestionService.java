@@ -29,7 +29,7 @@ public class QuestionService {
                                      .thenThrow(new RequestException(HttpStatus.BAD_REQUEST, "The provided asker id doesn't correspond to any user"))
                                      .orElseGet();
 
-        if (!asker.isVerified()) {
+        if (!asker.isAccountActivated()) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "The asker account is not confirmed yet");
         }
 

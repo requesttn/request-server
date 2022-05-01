@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegistrationRequest {
+public class RegisterUserRequest {
     private String firstname;
     private String lastname;
     private String email;
