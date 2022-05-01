@@ -1,8 +1,5 @@
-package tn.request.app;
+package tn.request.app.question;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +14,11 @@ import tn.request.service.question.QuestionService;
 @RequestMapping("/api/v1/questions")
 @AllArgsConstructor
 @Slf4j
-public class QuestionController {
+public class QuestionController implements IQuestionController {
 
     private QuestionService questionService;
 
-    @Operation(summary = "Post a new question")
-    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "400", description = "Invalid asker id", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "401", description = "Asker is unauthorized to ask questions", content = {@Content(mediaType = "application/json")})
+    @Override
     @PostMapping("/ask")
     public ResponseEntity<Object> askQuestion(@RequestBody QuestionData questionData) {
         questionService.askQuestion(questionData);

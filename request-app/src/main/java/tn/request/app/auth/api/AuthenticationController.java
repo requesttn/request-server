@@ -24,31 +24,27 @@ import tn.request.service.auth.UserRegistrationService;
 @RequestMapping("/api/v1")
 @AllArgsConstructor
 @Slf4j
-public class AuthenticationController {
+public class AuthenticationController implements IAuthenticationController {
 
     private UserRegistrationService registrationService;
     private LoginCredentialsMapper loginMapper;
     private UserRegistrationMapper userRegistrationMapper;
 
-    @Operation(summary = "Create a new user and send a confirmation link to user email.")
-    @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "400", description = "Invalid request", content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "409", description = "A user already registered with the same email", content = {@Content(mediaType = "application/json")})
+    @Override
     @PostMapping("/register")
     public ResponseEntity<UserRegistrationRequest> register(@RequestBody UserRegistrationRequest request) {
         registrationService.registerUser(userRegistrationMapper.userRegistrationRequestToUserRegistrationData(request));
         return ResponseEntity.ok(request);
     }
 
-    @Operation(summary = "Confirm user email")
-    @ApiResponse(responseCode = "200", content = {@Content(mediaType = MimeTypeUtils.TEXT_HTML_VALUE)})
-    @ApiResponse(responseCode = "400", description = "Token is either invalid or expired", content = {@Content(mediaType = MimeTypeUtils.APPLICATION_JSON_VALUE)})
+    @Override
     @GetMapping("/confirmRegistration")
     public ResponseEntity<Object> confirmEmail(@RequestParam("token") String token) {
         registrationService.confirmEmail(token);
         return ResponseEntity.ok("<h1>Registration Confirmed Successfully</h1");
     }
 
+    @Override
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         UserEntity loginResponse = registrationService.login(loginMapper.loginRequestToLoginData(request));

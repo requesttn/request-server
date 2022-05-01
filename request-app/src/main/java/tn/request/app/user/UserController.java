@@ -1,4 +1,4 @@
-package tn.request.app;
+package tn.request.app.user;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +14,11 @@ import tn.request.service.user.dto.UserDto;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserController {
+public class UserController implements IUserController {
 
     private UserService userService;
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
