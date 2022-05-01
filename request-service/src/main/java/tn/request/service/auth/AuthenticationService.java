@@ -35,20 +35,7 @@ public class AuthenticationService {
     private ConfirmationTokenRepository confirmationTokenRepository;
 
     /**
-     * Save
-     * user
-     * data
-     * in
-     * the
-     * database
-     * and
-     * send
-     * a
-     * confirmation
-     * link
-     * to
-     * his
-     * email
+     * Save user data in the database and send a confirmation link to his email
      */
     public void register(@NonNull User user) {
         Objects.requireNonNull(user.getEmail(), "Email is required");
@@ -70,17 +57,17 @@ public class AuthenticationService {
         UserEntity userEntity = userRepository.save(userMapper.toUserEntity(user));
 
         CompletableFuture.runAsync(() -> sendConfirmationEmailTo(userEntity))
-                         .handleAsync((unused, throwable) -> {
-                             if (throwable == null) {
-                                 log.info("Confirmation email sent successfully to '{}'", userEntity.getEmail());
-                             } else {
-                                 log.error(
-                                         "Error while sending confirmation email to '{}': {}",
-                                         userEntity.getEmail(),
-                                         throwable.toString());
-                             }
-                             return null;
-                         });
+                .handleAsync((unused, throwable) -> {
+                    if (throwable == null) {
+                        log.info("Confirmation email sent successfully to '{}'", userEntity.getEmail());
+                    } else {
+                        log.error(
+                                "Error while sending confirmation email to '{}': {}",
+                                userEntity.getEmail(),
+                                throwable.toString());
+                    }
+                    return null;
+                });
     }
 
     public void validateTokenAndActivateAccount(@NonNull String token) {
@@ -89,13 +76,7 @@ public class AuthenticationService {
     }
 
     /**
-     * Ensure
-     * token
-     * is
-     * valid
-     * and
-     * not
-     * expired
+     * Ensure token is valid an not expired
      */
     private Optional<ConfirmationTokenEntity> validateToken(String token) {
         Optional<ConfirmationTokenEntity> confirmationTokenOpt =
@@ -103,8 +84,8 @@ public class AuthenticationService {
 
         ConfirmationTokenEntity confirmationToken =
                 BazookaOpt.checkIfEmpty(confirmationTokenOpt)
-                          .thenThrow(new RequestException(HttpStatus.BAD_REQUEST, "Account confirmation token is invalid"))
-                          .orElseGet();
+                        .thenThrow(new RequestException(HttpStatus.BAD_REQUEST, "Account confirmation token is invalid"))
+                        .orElseGet();
 
         if (confirmationToken.isExpired()) {
             throw new RequestException("Account confirmation token is expired");
@@ -127,8 +108,8 @@ public class AuthenticationService {
     }
 
     private void sendConfirmationEmailTo(UserEntity user) {
-        String generatedToken = UUID.randomUUID()
-                                    .toString();
+        String generatedToken = UUID.randomUUID().toString();
+
         confirmationEmailSender.send(user.getEmail(), generatedToken);
         ConfirmationTokenEntity confirmationToken =
                 new ConfirmationTokenEntity(null, generatedToken, user);
@@ -156,8 +137,8 @@ public class AuthenticationService {
     private boolean isEmailInvalid(String email) {
         String regexEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return !Pattern.compile(regexEmail)
-                       .matcher(email)
-                       .matches();
+                .matcher(email)
+                .matches();
     }
 
     private boolean isPasswordInvalid(String password) {

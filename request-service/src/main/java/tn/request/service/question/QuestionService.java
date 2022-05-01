@@ -26,8 +26,8 @@ public class QuestionService {
         Optional<UserEntity> askerOpt = userRepository.findById(questionData.getAskerId());
 
         UserEntity asker = BazookaOpt.checkIfEmpty(askerOpt)
-                                     .thenThrow(new RequestException(HttpStatus.BAD_REQUEST, "The provided asker id doesn't correspond to any user"))
-                                     .orElseGet();
+                .thenThrow(new RequestException(HttpStatus.BAD_REQUEST, "The provided asker id doesn't correspond to any user"))
+                .orElseGet();
 
         if (!asker.isAccountActivated()) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "The asker account is not confirmed yet");

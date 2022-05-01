@@ -16,7 +16,7 @@ public class UserService {
 
     public UserDto getUserById(@NonNull Long id) {
         return UserDto.fromEntity(BazookaOpt.checkIfEmpty(userRepository.findById(id))
-                                            .thenThrow(new RequestException(HttpStatus.NOT_FOUND, "The provided id doesn't correspond to any user"))
-                                            .orElseGet());
+                .thenThrow(new RequestException(HttpStatus.NOT_FOUND, "The provided id doesn't correspond to any user"))
+                .orElseGet());
     }
 }
