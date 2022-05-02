@@ -1,15 +1,14 @@
 package tn.request.service.auth;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.regex.Pattern;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import tn.request.bazooka.opt.BazookaOpt;
 import tn.request.data.auth.ConfirmationTokenEntity;
@@ -21,18 +20,25 @@ import tn.request.service.auth.mapper.UserMapper;
 import tn.request.service.auth.model.User;
 import tn.request.service.question.exception.RequestException;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class AuthenticationService {
 
     private UserRepository userRepository;
-
     private ConfirmationEmailSender confirmationEmailSender;
-
     private UserMapper userMapper;
-
     private ConfirmationTokenRepository confirmationTokenRepository;
+
+    private AuthenticationManager authenticationManager;
+    private UserDetailsService userDetailsService;
+    private JwtService jwtService;
 
     /**
      * Save user data in the database and send a confirmation link to his email
@@ -116,21 +122,27 @@ public class AuthenticationService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
-    public User login(String email, String password) {
+    public String login(String email, String password) {
         Objects.requireNonNull(email);
         Objects.requireNonNull(password);
 
-        if (!userRepository.existsByEmail(email)) {
-            throw new RequestException(HttpStatus.NOT_FOUND, "The provided email doesn't belong to any user");
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        } catch (AuthenticationException exception) {
+            log.error("Error while authenticating user {} ", email, exception);
+            throw new RequestException(HttpStatus.FORBIDDEN, "Incorrect email or password");
         }
+
+        final UserDetails authenticatedUserDetails = userDetailsService.loadUserByUsername(email);
 
         UserEntity userEntity = userRepository.getUserEntityByEmail(email);
 
+        // TODO: Delegate this check to spring security
         if (!userEntity.isAccountActivated()) {
             throw new RequestException(HttpStatus.UNAUTHORIZED, "User account is not confirmed yet");
         }
 
-        return userMapper.fromUserEntity(userEntity);
+        return jwtService.generateToken(authenticatedUserDetails);
     }
 
     // Based on OWASP validation regular expression
