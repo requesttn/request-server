@@ -16,12 +16,10 @@ import java.util.Collections;
 @AllArgsConstructor
 public class SimpleUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
-    private UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findUserEntityByEmail(email)
-                .map(userMapper::fromUserEntity)
                 .map(user ->
                         User.withUsername(user.getEmail())
                                 .password(user.getPassword())

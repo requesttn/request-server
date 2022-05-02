@@ -10,6 +10,8 @@ import tn.request.service.auth.mapper.UserMapper;
 import tn.request.service.auth.model.User;
 import tn.request.service.question.exception.RequestException;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -20,6 +22,13 @@ public class UserService {
     public User getUserById(@NonNull Long id) {
         return userMapper.fromUserEntity(BazookaOpt.checkIfEmpty(userRepository.findById(id))
                 .thenThrow(new RequestException(HttpStatus.NOT_FOUND, "The provided id doesn't correspond to any user"))
+                .orElseGet());
+    }
+
+    public User getUserByEmail(String email) {
+        Objects.requireNonNull(email, "Email is required to get user");
+        return userMapper.fromUserEntity(BazookaOpt.checkIfEmpty(userRepository.findUserEntityByEmail(email))
+                .thenThrow(new RequestException(HttpStatus.NOT_FOUND, "The provided email doesn't correspond to any user"))
                 .orElseGet());
     }
 }

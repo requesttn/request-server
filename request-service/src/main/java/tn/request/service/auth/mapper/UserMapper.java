@@ -7,7 +7,5 @@ import tn.request.service.auth.model.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserEntity toUserEntity(User user);
-
     User fromUserEntity(UserEntity userEntity);
 }

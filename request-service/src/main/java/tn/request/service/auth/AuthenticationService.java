@@ -16,8 +16,8 @@ import tn.request.data.auth.ConfirmationTokenRepository;
 import tn.request.data.user.UserEntity;
 import tn.request.data.user.UserRepository;
 import tn.request.service.auth.mail.ConfirmationEmailSender;
-import tn.request.service.auth.mapper.UserMapper;
-import tn.request.service.auth.model.User;
+import tn.request.service.auth.mapper.UserRegistrationDetailsMapper;
+import tn.request.service.auth.model.UserRegistrationDetails;
 import tn.request.service.question.exception.RequestException;
 
 import java.util.Objects;
@@ -33,7 +33,7 @@ public class AuthenticationService {
 
     private UserRepository userRepository;
     private ConfirmationEmailSender confirmationEmailSender;
-    private UserMapper userMapper;
+    private UserRegistrationDetailsMapper registrationDetailsMapper;
     private ConfirmationTokenRepository confirmationTokenRepository;
 
     private AuthenticationManager authenticationManager;
@@ -43,24 +43,24 @@ public class AuthenticationService {
     /**
      * Save user data in the database and send a confirmation link to his email
      */
-    public void register(@NonNull User user) {
-        Objects.requireNonNull(user.getEmail(), "Email is required");
-        Objects.requireNonNull(user.getFirstname(), "Firstname is required");
-        Objects.requireNonNull(user.getLastname(), "Lastname is required");
+    public void register(@NonNull UserRegistrationDetails registrationDetails) {
+        Objects.requireNonNull(registrationDetails.getEmail(), "Email is required");
+        Objects.requireNonNull(registrationDetails.getFirstname(), "Firstname is required");
+        Objects.requireNonNull(registrationDetails.getLastname(), "Lastname is required");
 
-        if (isEmailInvalid(user.getEmail())) {
+        if (isEmailInvalid(registrationDetails.getEmail())) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "Email is invalid");
         }
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(registrationDetails.getEmail())) {
             throw new RequestException(HttpStatus.CONFLICT, "A user with the same email already exist");
         }
 
-        if (isPasswordInvalid(user.getPassword())) {
+        if (isPasswordInvalid(registrationDetails.getPassword())) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "Password is invalid");
         }
 
-        UserEntity userEntity = userRepository.save(userMapper.toUserEntity(user));
+        UserEntity userEntity = userRepository.save(registrationDetailsMapper.toUserEntity(registrationDetails));
 
         CompletableFuture.runAsync(() -> sendConfirmationEmailTo(userEntity))
                 .handleAsync((unused, throwable) -> {

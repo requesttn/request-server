@@ -1,10 +1,10 @@
 package tn.request.app.auth.mapper;
 
 import org.mapstruct.Mapper;
-import tn.request.app.auth.dto.RegisterUserRequest;
-import tn.request.service.auth.model.User;
+import tn.request.app.auth.dto.UserRegistrationRequest;
+import tn.request.service.auth.model.UserRegistrationDetails;
 
 @Mapper(componentModel = "spring")
 public interface UserRegistrationMapper {
-    User toUser(RegisterUserRequest request);
+    UserRegistrationDetails toUserRegistrationDetails(UserRegistrationRequest request);
 }

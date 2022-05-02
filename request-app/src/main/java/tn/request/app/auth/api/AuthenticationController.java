@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.request.app.auth.dto.LoginRequest;
-import tn.request.app.auth.dto.RegisterUserRequest;
+import tn.request.app.auth.dto.LoginResponse;
+import tn.request.app.auth.dto.UserRegistrationRequest;
 import tn.request.app.auth.mapper.UserRegistrationMapper;
 import tn.request.service.auth.AuthenticationService;
+import tn.request.service.user.UserService;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -16,12 +18,14 @@ import tn.request.service.auth.AuthenticationService;
 public class AuthenticationController implements IAuthenticationController {
 
     private AuthenticationService authenticationService;
+
+    private UserService userService;
     private UserRegistrationMapper userRegistrationMapper;
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<RegisterUserRequest> register(@RequestBody RegisterUserRequest request) {
-        authenticationService.register(userRegistrationMapper.toUser(request));
+    public ResponseEntity<UserRegistrationRequest> register(@RequestBody UserRegistrationRequest request) {
+        authenticationService.register(userRegistrationMapper.toUserRegistrationDetails(request));
         return ResponseEntity.ok(request);
     }
 
@@ -34,8 +38,8 @@ public class AuthenticationController implements IAuthenticationController {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         String jwt = authenticationService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new LoginResponse(jwt, userService.getUserByEmail(request.getEmail())));
     }
 }
