@@ -129,7 +129,7 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         } catch (AuthenticationException exception) {
-            log.error("Error while authenticating user {} ", email, exception);
+            log.error("Authentication failed for user '{}' ", email);
             throw new RequestException(HttpStatus.FORBIDDEN, "Incorrect email or password");
         }
 
